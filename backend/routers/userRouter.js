@@ -49,7 +49,7 @@ router.post("/login" , Login);
 router.post("/admin/addNew" , isAdminAuthentication ,addnewAdmin);
 
 //http://localhost:4000/api/user/doctors
-router.get("/doctors" ,isAdminAuthentication,getAllDoctors);
+router.get("/doctors" ,isPatientAuthenticated,getAllDoctors);
 
 //http://localhost:4000/api/user/patient/me
 router.get("/patient/me"  ,isPatientAuthenticated ,getUserDetails);

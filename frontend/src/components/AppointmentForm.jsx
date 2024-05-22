@@ -11,7 +11,7 @@ const AppointmentForm =() => {
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState(user.email);
+  const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [nic, setNic] = useState("");
   const [dob, setDob] = useState("");
@@ -40,9 +40,9 @@ const AppointmentForm =() => {
   useEffect(() => {
 
     //console.log("App user : " ,user.email);
-    setEmail(user.email);
-    setFirstName(user.firstName);
-    setLastName(user.lastName);
+    setEmail(user?.email);
+    setFirstName(user?.firstName);
+    setLastName(user?.lastName);
    // console.log("App email : " ,email);
 
     const fetchDoctors = async () => {
@@ -51,7 +51,7 @@ const AppointmentForm =() => {
         { withCredentials: true }
       );
       setDoctors(data.doctors);
-      //console.log(data.doctors);
+      console.log(data.doctors);
     };
     fetchDoctors();
   }, []);
