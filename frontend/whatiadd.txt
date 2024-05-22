@@ -1,0 +1,1 @@
+npm i axios react-icons react-multi-carousel react-router-dom react-toastify
