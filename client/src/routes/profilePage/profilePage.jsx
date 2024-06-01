@@ -5,16 +5,20 @@ import List from "../../components/list/List";
 import Chat from "../../components/chat/Chat";
 
 import { listData } from "../../lib/dummydata";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
+import apiRequest from "../../lib/apiRequest";
 
 export default function profilePage() {
 
+  const {updateUser , currentUser} = useContext(AuthContext);
 
   const navigate = useNavigate();
 
     const handleLogout = async () => {
       try {
         await apiRequest.post("/auth/logout");
-      //  updateUser(null);
+       updateUser(null);
         navigate("/");
       } catch (err) {
         console.log(err);
@@ -35,13 +39,13 @@ export default function profilePage() {
         <div className="info">
           <span>
             Avatar:
-            <img src={userData.img || "noavatar.jpg"} alt="" />
+            <img src={currentUser.avatar || "noavatar.jpg"} alt="" />
           </span>
           <span>
-            Username: <b>{userData.name}</b>
+            Username: <b>{currentUser.username}</b>
           </span>
           <span>
-            E-mail: <b> sddfgddg@gmail.com </b>
+            E-mail: <b> {currentUser.email} </b>
           </span>
           <button onClick={handleLogout}>Logout</button>
         </div>

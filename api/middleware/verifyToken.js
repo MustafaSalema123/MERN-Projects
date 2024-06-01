@@ -1,7 +1,6 @@
 const jwt =  require("jsonwebtoken");
 require("dotenv").config();
-
-export const verifyToken = (req, res, next) => {
+ const verifyToken = (req, res, next) => {
   const token = req.cookies.token;
 
   if (!token) return res.status(401).json({ message: "Not Authenticated!" });
@@ -13,3 +12,6 @@ export const verifyToken = (req, res, next) => {
     next();
   });
 };
+
+
+module.exports =  verifyToken;

@@ -1,21 +1,27 @@
-import React from 'react'
-import {  singlePostData, userData } from "../../lib/dummydata";
+import React, { useContext } from 'react'
+//import {   userData } from "../../lib/dummydata";
 import {  useState } from "react";
 
 import "./singlePage.scss";
 import Slider from "../../components/slider/Slider";
 import Map from "../../components/map/Map";
+import { useLoaderData, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
 
 export default function singlePage() {
 
-    const post = singlePostData;
-
+    const post = useLoaderData();
+    console.log("post " , post);
+    const [saved, setSaved] = useState(post.isSaved);
+    const { currentUser } = useContext(AuthContext);
+    const  navigate = useNavigate();
     const handleSave = () => 
     {
 
     }
 
-    const [saved, setSaved] = useState(post.isSaved);
+    
+
   return (
     <div className="singlePage">
     <div className="details">
@@ -32,8 +38,8 @@ export default function singlePage() {
               <div className="price">$ {post.price}</div>
             </div>
             <div className="user">
-              <img src={userData.img} alt="" />
-              <span>{userData.name}</span>
+              <img src={post.user.avatar ? post.user.avatar : "/noavatar.jpg"} alt="" />
+              <span>{post.user.username}</span>
             </div>
           </div>
           {/* <div

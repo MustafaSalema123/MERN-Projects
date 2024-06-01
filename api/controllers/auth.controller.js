@@ -75,8 +75,9 @@ require("dotenv").config();
       { expiresIn: age }
     );
 
-    const { password: userPassword, ...userInfo } = user;
+    const { password: userPassword, ...userInfo } = user._doc;
 
+    //console.log(userInfo , " safsfsdfs " , user)
     res
       .cookie("token", token, {
         httpOnly: true,

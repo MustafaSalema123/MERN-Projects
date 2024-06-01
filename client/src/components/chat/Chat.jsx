@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function Chat() {
 
-    const [chat, setChat] = useState(null);
+    //const [chat, setChat] = useState(null);
 
   return (
     <></>

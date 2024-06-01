@@ -3,3 +3,8 @@ wgat is outlet in react dom
 leaflet docs i want to learn
 
 DOMPurify
+
+
+reatcQuill for bold, heading and many more thing
+
+what is defer in react dom

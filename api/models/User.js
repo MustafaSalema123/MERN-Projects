@@ -27,7 +27,9 @@ const UserSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
+  posts: [{ type: Schema.ObjectId, ref: 'Post' }],
+  savedPosts: [{ type: Schema.ObjectId, ref: 'SavedPost' }],
 });
 
 const User = mongoose.model('User', UserSchema);

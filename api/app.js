@@ -1,7 +1,10 @@
 const express =  require("express");
 const authRoute =  require("./routes/auth.route");
+const userRoute = require("./routes/user.route");
+const postRoute =  require("./routes/post.route");
 const cookieParser =  require("cookie-parser");
 const dbconnection =  require("./database/dbConnection");
+
 
 require("dotenv").config();
 const cors = require("cors");
@@ -13,8 +16,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/auth", authRoute);
-// app.use("/api/users", userRoute);
-// app.use("/api/posts", postRoute);
+app.use("/api/users", userRoute);
+app.use("/api/posts", postRoute);
 // app.use("/api/test", testRoute);
 // app.use("/api/chats", chatRoute);
 // app.use("/api/messages", messageRoute);
