@@ -20,19 +20,23 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
-    required: true
+    required: [true, "Password Is Required!"],
+    minLength: [8, "Password Must Contain At Least 8 Characters!"],
   },
   avatar: { type: String },
   createdAt: {
     type: Date,
     default: Date.now
-  },
-  posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
-  savedPosts: [{ type: Schema.Types.ObjectId, ref: 'SavedPost' }],
-  chats: [{ type: Schema.Types.ObjectId, ref: 'Chat' }],
-  chatIDs: [{ type: Schema.Types.ObjectId }]
+  }
 });
 
 const User = mongoose.model('User', UserSchema);
 
 module.exports = User;
+
+
+
+  // posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
+  // savedPosts: [{ type: Schema.Types.ObjectId, ref: 'SavedPost' }],
+  // chats: [{ type: Schema.Types.ObjectId, ref: 'Chat' }],
+  // chatIDs: [{ type: Schema.Types.ObjectId }]

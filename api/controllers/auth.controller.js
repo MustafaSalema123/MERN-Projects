@@ -4,29 +4,37 @@ const jwt =  require("jsonwebtoken");
 require("dotenv").config();
 
  const register = async (req, res) => {
+
+  
   const { username, email, password } = req.body;
 
   try {
     // HASH THE PASSWORD
+
+
+    let user  = await User.findOne( { email});
+    if(user)
+    {
+    return res.status(400).json({message: "Email is exist"});
+    
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     console.log(hashedPassword);
 
     // CREATE A NEW USER AND SAVE TO DB
-    const newUser = await User({
-      data: {
-        username,
-        email,
-        password: hashedPassword,
-      },
-    });
-
+    
       //save user and respond
-      const user = await newUser.save();
-      res.status(200).json(user);
+  
+      user = await User.create( { username,email,  password : hashedPassword, });
 
-    res.status(201).json({ message: "User created successfully" });
+    //return res.status(201).json({ message: "User created successfully" });
+
+    return res.status(200).json({
+      user: user,
+      message : "User created successfully ! ",
+  });
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Failed to create user!" });
@@ -35,23 +43,23 @@ require("dotenv").config();
 
 
  const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { username, password } = req.body;
 
   try {
     // CHECK IF THE USER EXISTS
 
-    const user = await User.findOne({ email});
+    const user = await User.findOne({ username});
     !user && res.status(404).json("user not found");
 
   
 
     // CHECK IF THE PASSWORD IS CORRECT
-
+ 
     const validPassword = await bcrypt.compare(password, user.password)
-    !validPassword && res.status(400).json("wrong password")
+    !validPassword &&  res.status(400).json("wrong password")
 
-    if (!isPasswordValid)
-      return res.status(400).json({ message: "Invalid Credentials!" });
+    //if (!isPasswordValid)
+      //return res.status(400).json({ message: "Invalid Credentials!" });
 
     // GENERATE COOKIE TOKEN AND SEND TO THE USER
 
