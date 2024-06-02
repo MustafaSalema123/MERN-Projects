@@ -70,6 +70,17 @@ export default function Chat({chats}) {
     };
   }, [socket, chat]);
 
+  const handleCreateChat = async (receiverId) => {
+    try {
+      const res = await apiRequest.post('/chats', { receiverId });
+      const newChat = res.data;
+      setChat(newChat);
+      // Optionally, update the list of chats
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="chat">
     <div className="messages">
@@ -92,6 +103,7 @@ export default function Chat({chats}) {
         </div>
       ))}
     </div>
+    <button onClick={() => handleCreateChat(receiverId)}>Start New Chat</button>
     {chat && (
       <div className="chatBox">
         <div className="top">
