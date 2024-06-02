@@ -2,8 +2,8 @@
 const Post = require("../models/Post")
 const jwt =  require("jsonwebtoken");
 const PostDetail = require("../models/PostDetail")
-const User = require("../models/User")
-
+//const User = require("../models/User")
+const SavedPost = require("../models/SavedPost")
 
 
  const getPosts = async (req, res) => {
@@ -27,6 +27,9 @@ const User = require("../models/User")
 //console.log("query new " , query);
   try {
     const posts = await Post.find(query);
+      // setTimeout(() => {
+        //res.status(200).json(posts);
+        // }, 3000);
     ///console.log(posts , " xac ");
     res.status(200).json(posts);
   } catch (err) {
@@ -41,35 +44,47 @@ const User = require("../models/User")
 
  const getPost = async (req, res) => {
   const id = req.params.id;
+ 
   try {
     const post = await Post.findById(id)
     .populate('postDetail')
     .populate('user', 'username avatar');
 
-      console.log("get post ./ " , post);
+     
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
     }
-    return res.status(200).json(post);
+   // return res.status(200).json(post);
 
-    //const token = req.cookies?.token;
+    const token = req.cookies?.token;
 
-    // if (token) {
-    //   jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, payload) => {
-    //     if (err) {
-    //       return res.status(403).json({ message: "Invalid token" });
-    //     }
+    if (token) {
+      jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, payload) => {
+        if (err) {
+          return res.status(403).json({ message: "Invalid token" });
+        }
 
-    //     const saved = await SavedPost.findOne({
-    //       postId: id,
-    //       userId: payload.id,
-    //     });
+        // const saved = await SavedPost.findOne({
+        //   userId: payload.id,
+        //   postId: id,  
+        // });
+        // res.status(200).json({ ...post.toObject(), isSaved: !!saved });
+        try {
+          const saved = await SavedPost.findOne({
+            post: id,
+            user: payload.id,
+          });
+         
+          res.status(200).json({ ...post.toObject(), isSaved: !!saved});
+        } catch (err) {
+          console.log("Error finding saved post:", err);
+          res.status(500).json({ message: "Error checking saved status" });
+        }
 
-    //     res.status(200).json({ ...post.toObject(), isSaved: !!saved });
-    //   });
-    // } else {
-    //   res.status(200).json({ ...post.toObject(), isSaved: false });
-    // }
+      });
+    } else {
+      res.status(200).json({ ...post.toObject(), isSaved: false } );
+    }
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Failed to get post" });
@@ -81,24 +96,32 @@ const addPost = async (req, res) => {
   const tokenUserId = req.userId; // Assuming userId is available in req
 
   try {
-    // Create a new post detail
-
-    const NewpostData = new Post({
+    // Step 1: Create and save the Post
+    const newPostData = new Post({
       ...postData,
       user: tokenUserId,
     });
-    await NewpostData.save();
+    await newPostData.save();
+
+
+
+   // Step 2: Create and save the PostDetail with reference to the Post
     const newPostDetail = new PostDetail({
       ...postDetail,
-      post: NewpostData._id // Assuming you're passing the post _id from the frontend
+      post: newPostData._id
     });
     await newPostDetail.save();
+
+
    // console.log( NewpostData._id ," assdsdd ", newPostDetail);
     // Create a new post
 
-    
+   // Step 3: Update the Post with reference to the PostDetail
+    newPostData.postDetail = newPostDetail._id;
+    await newPostData.save();
 
-    res.status(200).json({ NewpostData});
+
+    res.status(200).json({ newPostData});
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to create post" });

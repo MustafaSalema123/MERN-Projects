@@ -18,7 +18,7 @@ export default function SearchBar() {
       const switchType = (val) => {
         setQuery((prev) => ({ ...prev, type: val }));
 
-        console.log(query);
+        //console.log(query);
       };
     
       const handleChange = (e) => {

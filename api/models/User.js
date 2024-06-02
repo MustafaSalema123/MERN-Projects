@@ -30,6 +30,8 @@ const UserSchema = new Schema({
   },
   posts: [{ type: Schema.ObjectId, ref: 'Post' }],
   savedPosts: [{ type: Schema.ObjectId, ref: 'SavedPost' }],
+  chats: [{ type: Schema.Types.ObjectId, ref: 'Chat' }],
+  chatIDs: [{ type: Schema.Types.ObjectId }]
 });
 
 const User = mongoose.model('User', UserSchema);

@@ -41,7 +41,7 @@ import { Await, useLoaderData } from 'react-router-dom';
 
 export default function ListPage() { // Capitalize the component name to follow convention
   const posts = useLoaderData();
- console.log(posts , " afsds ");
+// console.log(posts , " afsds ");
   return (
     <div className="listPage">
       <div className="listContainer">
@@ -62,7 +62,7 @@ export default function ListPage() { // Capitalize the component name to follow 
 
 
           {posts.map((items) => (
-            <Card key={items.id} item={items}/>
+            <Card key={items._id} item={items}/>
           ))}
         </div>
       </div>

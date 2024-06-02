@@ -56,7 +56,7 @@ export default function NewPostPage() {
                   },
           
             });
-                //console.log(" jvbxjvjv " , res.data)
+                console.log(" jvbxjvjv " , res.data)
             navigate("/"+res.data.id)
 
         } catch (err) {

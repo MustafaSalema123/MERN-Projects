@@ -1,16 +1,18 @@
-import {   userData } from "../../lib/dummydata";
-import { Link  , useNavigate} from "react-router-dom";
+//import {   userData } from "../../lib/dummydata";
+import { Await, Link  , useLoaderData, useNavigate} from "react-router-dom";
 import "./profilePage.scss";
 import List from "../../components/list/List";
 import Chat from "../../components/chat/Chat";
 
 import { listData } from "../../lib/dummydata";
-import { useContext } from "react";
+import { Suspense, useContext, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import apiRequest from "../../lib/apiRequest";
 
 export default function profilePage() {
 
+    const data = useLoaderData();
+  console.log( data )
   const {updateUser , currentUser} = useContext(AuthContext);
 
   const navigate = useNavigate();
@@ -24,6 +26,8 @@ export default function profilePage() {
         console.log(err);
       }
       };
+
+     
 
       
   return (
@@ -55,15 +59,33 @@ export default function profilePage() {
             <button>Create New Post</button>
           </Link>
         </div>
-        <h1>List data</h1>
-        <List posts={listData}/>
+        {/* with difer */}
+       <Suspense fallback={<p>Loading...</p>}> 
+          <Await        
+          resolve={data.postResponse}
+            errorElement={<p>Error loading posts!</p>}>
+
+        {(postResponse) => <List posts={postResponse.data.userPosts} />}  
+          </Await>
+
+       </Suspense>
+        {/* <List posts={data.userPosts}/> without differ */} 
 
 
         <div className="title">
           <h1>Saved List</h1>
         </div>
-        <h1>List data</h1>
-        <List posts={listData}/>
+        
+        <Suspense fallback={<p>Loading...</p>}>
+            <Await
+              resolve={data.postResponse}
+              errorElement={<p>Error loading posts!</p>}
+            >
+              {(postResponse) => <List posts={postResponse.data.savedPosts} />}
+            </Await>
+          </Suspense>
+
+        {/* <List posts={data.savedPosts}/> */}
 
 
       </div>
@@ -71,7 +93,15 @@ export default function profilePage() {
     <div className="chatContainer">
       <div className="wrapper">
       <h1>Chat data</h1>
-       <Chat/>
+      <Suspense fallback={<p>Loading...</p>}>
+            <Await
+              resolve={data.chatResponse}
+              errorElement={<p>Error loading chats!</p>}
+            >
+              {(chatResponse) => <Chat chats={chatResponse.data}/>}
+            </Await>
+          </Suspense>
+       {/* <Chat/> */}
       </div>
     </div>
   </div>

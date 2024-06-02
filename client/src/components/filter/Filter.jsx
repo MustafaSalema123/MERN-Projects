@@ -106,7 +106,7 @@ export default function Filter() {
             defaultValue={query.bedroom}
           />
         </div>
-        <button >
+        <button onClick={handleFilter}>
           <img src="/search.png" alt="" />
         </button>
       </div>

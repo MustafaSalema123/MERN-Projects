@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const validator = require("validator");
+
 
 
 const PostDetailSchema = new Schema({
@@ -13,7 +13,7 @@ const PostDetailSchema = new Schema({
   school: { type: Number },
   bus: { type: Number },
   restaurant: { type: Number },
-  post: { type: Schema.ObjectId, ref: 'Post', unique: true}
+  post: { type: Schema.ObjectId, ref: 'Post', required: true }
   
 });
 

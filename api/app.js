@@ -2,6 +2,9 @@ const express =  require("express");
 const authRoute =  require("./routes/auth.route");
 const userRoute = require("./routes/user.route");
 const postRoute =  require("./routes/post.route");
+const chatRoute =require("./routes/chat.route");
+const messageRoute =require("./routes/message.route");
+
 const cookieParser =  require("cookie-parser");
 const dbconnection =  require("./database/dbConnection");
 
@@ -19,8 +22,8 @@ app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
 // app.use("/api/test", testRoute);
-// app.use("/api/chats", chatRoute);
-// app.use("/api/messages", messageRoute);
+app.use("/api/chats", chatRoute);
+app.use("/api/messages", messageRoute);
 
 dbconnection();
 

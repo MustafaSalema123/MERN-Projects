@@ -1,23 +1,39 @@
 import React, { useContext } from 'react'
 //import {   userData } from "../../lib/dummydata";
 import {  useState } from "react";
-
+import DOMPurify from "dompurify";
 import "./singlePage.scss";
 import Slider from "../../components/slider/Slider";
 import Map from "../../components/map/Map";
 import { useLoaderData, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import apiRequest from '../../lib/apiRequest';
 
 export default function singlePage() {
 
     const post = useLoaderData();
-    console.log("post " , post);
+    
     const [saved, setSaved] = useState(post.isSaved);
     const { currentUser } = useContext(AuthContext);
     const  navigate = useNavigate();
-    const handleSave = () => 
-    {
 
+
+    const handleSave = async () => 
+    {
+      if (!currentUser) {
+        navigate("/login");
+      }
+
+       // AFTER REACT 19 UPDATE TO USEOPTIMISTIK HOOK
+    setSaved((prev) => !prev);
+
+    try {
+      await apiRequest.post("/users/save", { postId: post._id });
+
+    } catch (err) {
+      console.log(err);
+      setSaved((prev) => !prev);
+    }
     }
 
     
@@ -42,12 +58,12 @@ export default function singlePage() {
               <span>{post.user.username}</span>
             </div>
           </div>
-          {/* <div
+          <div
             className="bottom"
             dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(post.postDetail.desc),
+              __html: DOMPurify.sanitize(post.desc),
             }}
-          ></div> */}
+          ></div>
         </div>
       </div>
     </div>
@@ -59,29 +75,29 @@ export default function singlePage() {
             <img src="/utility.png" alt="" />
             <div className="featureText">
               <span>Utilities</span>
-              {/* {post.postDetail.utilities === "owner" ? (
+              {post.postDetail?.utilities === "owner" ? (
                 <p>Owner is responsible</p>
-              ) : ( */}
+              ) : (
                 <p>Tenant is responsible</p>
-              {/* )} */}
+               )} 
             </div>
           </div>
           <div className="feature">
             <img src="/pet.png" alt="" />
             <div className="featureText">
               <span>Pet Policy</span>
-              {/* {post.postDetail.pet === "allowed" ? (
+              {post.postDetail?.pet === "allowed" ? (
                 <p>Pets Allowed</p>
-              ) : ( */}
+              ) : (
                 <p>Pets not Allowed</p>
-              {/* )} */}
+               )}
             </div>
           </div>
           <div className="feature">
             <img src="/fee.png" alt="" />
             <div className="featureText">
               <span>Income Policy</span>
-              <p>1213131</p>
+              <p>{post.postDetail?.income}</p>
             </div>
           </div>
         </div>
@@ -89,7 +105,7 @@ export default function singlePage() {
         <div className="sizes">
           <div className="size">
             <img src="/size.png" alt="" />
-            <span> 12 sqft</span>
+            <span> {post.postDetail?.size}m sqft</span>
           </div>
           <div className="size">
             <img src="/bed.png" alt="" />
@@ -107,9 +123,9 @@ export default function singlePage() {
             <div className="featureText">
               <span>School</span>
               <p>
-                {/* {post.postDetail.school > 999
-                  ? post.postDetail.school / 1000 + "km"
-                  : post.postDetail.school + "m"}{" "} */}
+                {post.postDetail?.school > 999
+                  ? post.postDetail?.school / 1000 + "km"
+                  : post.postDetail?.school + "m"}{" "}
                 away
               </p>
             </div>
@@ -118,14 +134,14 @@ export default function singlePage() {
             <img src="/pet.png" alt="" />
             <div className="featureText">
               <span>Bus Stop</span>
-              <p>bus 12 m away</p>
+              <p>{post.postDetail?.bus}m away</p>
             </div>
           </div>
           <div className="feature">
             <img src="/fee.png" alt="" />
             <div className="featureText">
               <span>Restaurant</span>
-              <p>restaurant m away</p>
+              <p>{post.postDetail?.restaurant}m away</p>
             </div>
           </div>
         </div>
@@ -145,8 +161,7 @@ export default function singlePage() {
             }}
           >
             <img src="/save.png" alt="" />
-            {"Save the Place"}
-            {/* saved ? "Place Saved" :  */}
+            {saved ? "Place Saved" : "Save the Place"}
           </button>
         </div>
       </div>

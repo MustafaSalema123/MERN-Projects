@@ -9,7 +9,10 @@ export default function Map({items}) {
   return (
     <MapContainer
     center={
-        [19.105781,72.843637]
+      items.length === 1
+      ? [items[0].latitude, items[0].longitude]
+      : [52.4797, -1.90269]
+  
     }
     zoom={7}
     scrollWheelZoom={false}
@@ -20,7 +23,7 @@ export default function Map({items}) {
       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
     />
     {items.map((item) => (
-      <Pin item={item} key={item.id} />
+      <Pin item={item} key={item._id} />
     ))}
   </MapContainer>
   )

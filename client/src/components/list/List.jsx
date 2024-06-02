@@ -5,7 +5,7 @@ export default function List({posts}) {
   return (
     <div className='list'>
     {posts.map(item=>(
-      <Card key={item.id} item={item}/>
+      <Card key={item._id} item={item}/>
     ))}
   </div>
   )

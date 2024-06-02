@@ -13,7 +13,7 @@ import Login from "./routes/login/login";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ProfileUpdatePage from "./routes/profileUpdatePage/profileUpdatePage";
 import NewPostPage from "./routes/newPostPage/newPostPage";
-import { listPageLoader, singlePostLoader } from "./lib/loaders";
+import { listPageLoader, profilePageLoader, singlePostLoader } from "./lib/loaders";
 function App() {
 
   const router = createBrowserRouter([
@@ -54,7 +54,8 @@ function App() {
       children: [
         {         
             path: "/profile",
-            element: <ProfilePage />          
+            element: <ProfilePage />,  
+            loader: profilePageLoader        
         }, {
           path: "/profile/update",
           element: <ProfileUpdatePage/>

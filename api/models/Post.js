@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const validator = require("validator");
 
 
 const PostSchema = new Schema({
@@ -18,11 +17,13 @@ const PostSchema = new Schema({
   property: { type: String, enum: ['apartment', 'house', 'condo', 'land'], required: true },
   createdAt: { type: Date, default: Date.now },
   user: { type: Schema.ObjectId, ref: 'User', required: true },
-  postDetail: { type: Schema.ObjectId, ref: 'PostDetail'},
+  postDetail: { type: Schema.ObjectId, ref: 'PostDetail' },
   savedPosts: [{ type: Schema.ObjectId, ref: 'SavedPost' }]
 });
 
 const Post = mongoose.model('Post', PostSchema);
+
+
 
 module.exports = Post;
 

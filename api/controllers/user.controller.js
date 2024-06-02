@@ -1,5 +1,8 @@
 const User = require("../models/User")
 const bcrypt = require("bcrypt");
+const SavedPost = require("../models/SavedPost")
+const Post = require("../models/Post")
+
 require("dotenv").config();
 
 
@@ -90,6 +93,71 @@ const updateUser =async (req , res) =>
 };
 
 
+const savePost = async (req, res) => {
+  const postId = req.body.postId;
+  const tokenUserId = req.userId;
 
-module.exports = { getUsers , getUser ,updateUser, deleteUser}
+  if (!postId) {
+    return res.status(400).json({ message: "Post ID is required" });
+  }
+
+  try {
+
+   // console.log("Received postId:", postId);
+    //console.log("Received tokenUserId:", tokenUserId);
+
+
+    // Check if the post is already saved by the user
+    const savedPost = await SavedPost.findOne({
+      user: tokenUserId,
+      post: postId,
+    });
+
+    if (savedPost) {
+      // If found, remove it
+      await SavedPost.deleteOne({ _id: savedPost._id });
+      res.status(200).json({ message: "Post removed from saved list" });
+    } else {
+      // If not found, create a new saved post
+      const newSavedPost = new SavedPost({
+        user: tokenUserId,
+        post: postId,
+      });
+      await newSavedPost.save();
+      res.status(200).json({ message: "Post saved" });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to save or remove post!" });
+  }
+};
+
+const profilePosts = async (req, res) => {
+  const tokenUserId = req.userId; // Assuming req.userId is set by authentication middleware
+  //console.log(tokenUserId , " sadaf ");
+  try {
+    // Find all posts created by the user
+    
+    const userPosts = await Post.find({ user: tokenUserId });
+
+    if (!userPosts) {
+      return res.status(400).json({ message: "userPost ID is required" });
+    }
+    // Find all saved posts by the user
+    const saved = await SavedPost.find({ user: tokenUserId }).populate('post');
+    if (!saved) {
+      return res.status(400).json({ message: "saveduser ID is required" });
+    }
+    // Extract the posts from the saved documents
+    const savedPosts = saved.map((item) => item.post);
+
+    res.status(200).json({ userPosts, savedPosts });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to get profile posts!" });
+  }
+};
+
+
+module.exports = { getUsers , getUser ,updateUser, deleteUser  ,savePost , profilePosts}
 
