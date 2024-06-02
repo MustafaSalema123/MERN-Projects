@@ -1,7 +1,9 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { AuthContext } from '../../context/AuthContext';
 import apiRequest from '../../lib/apiRequest';
+import { format } from "timeago.js";
 import { socketContext } from '../../context/SocketContext';
+import "./chat.scss";
 
 export default function Chat({chats}) {
 
@@ -9,6 +11,9 @@ export default function Chat({chats}) {
   const { currentUser } = useContext(AuthContext);
   const { socket } = useContext(socketContext);
 
+  //console.log(chats , " asdsf ")
+
+ //console.log(currentUser , " asfds ")
 
   const messageEndRef = useRef();
 
@@ -19,7 +24,7 @@ export default function Chat({chats}) {
   const handleOpenChat = async (id, receiver) => {
     try {
       const res = await apiRequest("/chats/" + id);
-      if (!res.data.seenBy.includes(currentUser.id)) {
+      if (!res.data.seenBy.includes(currentUser._id)) {
        // decrease();
       }
       setChat({ ...res.data, receiver });
@@ -36,11 +41,12 @@ export default function Chat({chats}) {
 
     if (!text) return;
     try {
-      const res = await apiRequest.post("/messages/" + chat.id, { text });
+      const res = await apiRequest.post("/messages/" + chat._id, { text });
       setChat((prev) => ({ ...prev, messages: [...prev.messages, res.data] }));
       e.target.reset();
+      
       socket.emit("sendMessage", {
-        receiverId: chat.receiver.id,
+        receiverId: chat.receiver._id,
         data: res.data,
       });
     } catch (err) {
@@ -51,7 +57,7 @@ export default function Chat({chats}) {
   useEffect(() => {
     const read = async () => {
       try {
-        await apiRequest.put("/chats/read/" + chat.id);
+        await apiRequest.put("/chats/read/" + chat._id);
       } catch (err) {
         console.log(err);
       }
@@ -59,7 +65,7 @@ export default function Chat({chats}) {
 
     if (chat && socket) {
       socket.on("getMessage", (data) => {
-        if (chat.id === data.chatId) {
+        if (chat._id === data.chatId) {
           setChat((prev) => ({ ...prev, messages: [...prev.messages, data] }));
           read();
         }
@@ -88,28 +94,28 @@ export default function Chat({chats}) {
       {chats?.map((c) => (
         <div
           className="message"
-          key={c.id}
+          key={c._id}
           style={{
             backgroundColor:
-              c.seenBy.includes(currentUser.id) || chat?.id === c.id
+              c.seenBy.includes(currentUser._id) || chat?._id === c._id
                 ? "white"
                 : "#fecd514e",
           }}
-          onClick={() => handleOpenChat(c.id, c.receiver)}
+          onClick={() => handleOpenChat(c._id, c.receiver)}
         >
-          <img src={c.receiver.avatar || "/noavatar.jpg"} alt="" />
-          <span>{c.receiver.username}</span>
+          <img src={c.receiver?.avatar || "/noavatar.jpg"} alt="" />
+          <span>{c.receiver?.username}</span>
           <p>{c.lastMessage}</p>
         </div>
       ))}
     </div>
-    <button onClick={() => handleCreateChat(receiverId)}>Start New Chat</button>
+    {/* <button onClick={() => handleCreateChat(receiverId)}>Start New Chat</button> */}
     {chat && (
       <div className="chatBox">
         <div className="top">
           <div className="user">
-            <img src={chat.receiver.avatar || "noavatar.jpg"} alt="" />
-            {chat.receiver.username}
+            <img src={chat.receiver?.avatar || "noavatar.jpg"} alt="" />
+            {chat.receiver?.username}
           </div>
           <span className="close" onClick={() => setChat(null)}>
             X
@@ -121,13 +127,13 @@ export default function Chat({chats}) {
               className="chatMessage"
               style={{
                 alignSelf:
-                  message.userId === currentUser.id
+                  message.userId === currentUser._id
                     ? "flex-end"
                     : "flex-start",
                 textAlign:
-                  message.userId === currentUser.id ? "right" : "left",
+                  message.userId === currentUser._id ? "right" : "left",
               }}
-              key={message.id}
+              key={message._id}
             >
               <p>{message.text}</p>
               <span>{format(message.createdAt)}</span>

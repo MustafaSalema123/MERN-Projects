@@ -7,19 +7,37 @@ const User = require("../models/User")
 
   try
   {
+    // const chats = await Chat.find({
+    //   userIDs: tokenUserId,
+    // }).populate("messages");
+
+    // for(const chat of chats)
+    // {
+    //   const receiverId = chat.userIDs.find((id) => id.toString() !== tokenUserId.toString());
+
+    //   const receiver = await User.findById(receiverId, 'id username avatar');
+    //   chat.receiver = receiver;
+    // }
+
+    // res.status(200).json(chats);
+
     const chats = await Chat.find({
       userIDs: tokenUserId,
-    }).populate("messages");
+    })
+    .populate('messages')
+    .populate('userIDs', 'id username avatar'); // Populate userIDs to get username and avatar
 
-    for(const chat of chats)
-    {
-      const receiverId = chat.userIDs.find((id) => id.toString() !== tokenUserId.toString());
+    // Attach the receiver information to each chat
+    const chatsWithReceivers = chats.map(chat => {
+      const receiver = chat.userIDs.find(user => user._id.toString() !== tokenUserId.toString());
+      return {
+        ...chat.toObject(),
+        receiver: receiver
+      };
+    });
 
-      const receiver = await User.findById(receiverId, 'id username avatar');
-      chat.receiver = receiver;
-    }
+    res.status(200).json(chatsWithReceivers);
 
-    res.status(200).json(chats);
 
   }catch(err){
     console.log(err);

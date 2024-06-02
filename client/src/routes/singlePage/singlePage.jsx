@@ -36,6 +36,21 @@ export default function singlePage() {
     }
     }
 
+    const handleChat = async () => 
+    {
+     
+
+
+    try {
+      const res = await apiRequest.post("/chats", { receiverId: post.user });
+
+      console.log(res , " singlepage ")
+
+    } catch (err) {
+      console.log(err);
+    }
+    }
+
     
 
   return (
@@ -150,7 +165,7 @@ export default function singlePage() {
           <Map items={[post]} />
         </div>
         <div className="buttons">
-          <button>
+          <button onClick={handleChat}>
             <img src="/chat.png" alt="" />
             Send a Message
           </button>
