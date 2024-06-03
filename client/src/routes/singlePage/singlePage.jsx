@@ -17,7 +17,7 @@ export default function singlePage() {
     const { currentUser } = useContext(AuthContext);
     const  navigate = useNavigate();
 
-
+ // console.log( post.user._id , " ", currentUser._id)
     const handleSave = async () => 
     {
       if (!currentUser) {
@@ -164,7 +164,8 @@ export default function singlePage() {
         <div className="mapContainer">
           <Map items={[post]} />
         </div>
-        <div className="buttons">
+        {post.user._id  !== currentUser._id ?
+       ( <div className="buttons">
           <button onClick={handleChat}>
             <img src="/chat.png" alt="" />
             Send a Message
@@ -178,7 +179,8 @@ export default function singlePage() {
             <img src="/save.png" alt="" />
             {saved ? "Place Saved" : "Save the Place"}
           </button>
-        </div>
+        </div>)
+        : null}
       </div>
     </div>
   </div>
