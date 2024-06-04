@@ -1,0 +1,66 @@
+ <!-- Fonts.google.com -->
+ //Materal Ui
+
+ npm install @material-ui/core
+ npm install @mui/icons-material
+
+ npm install @mui/material @emotion/react @emotion/styled
+
+//dont add this  beasce we sue new version of react that not need this
+import React from 'react'
+
+//if we dont reaconize the react file  if we entert it not create div than ve want to convert he file name .js to jsx 
+ <div className="topbarLeft"></div> this will direct create if we convert the file
+
+
+ export default function Topbar() {
+  return (
+    <div className="topbarContainer">
+      <div className="topbarLeft">
+        <span className="logo">MySocial</span>
+      </div>
+      <div className="topbarCenter">
+        <div className="searchbar">
+          <Search className="searchIcon"/>
+          <input placeholder="Serch for friend , post or vider" className="searchInput" />
+
+        </div>
+      </div>
+      <div className="topbarRight">
+      <div className="topbarLinks">
+          <span className="topbarLink">Homepage </span>
+          <span className="topbarLink">Timeline</span>
+        </div>
+        <div className="topbarIcons">
+          <div className="topbarIconsItem">
+            <Person/>
+            <span className="topbarIconBadge">1</span>
+          </div>
+          <div className="topbarIconItem">
+            <Chat />
+            <span className="topbarIconBadge">2</span>
+          </div>
+          <div className="topbarIconItem">
+            <Notifications />
+            <span className="topbarIconBadge">1</span>
+          </div>
+        </div>
+        <img src="/assests/person/1.jpeg" alt="notFound" className="topbarImg"/>
+      </div>
+    </div>
+  )
+}
+
+//both profule and home logv of working
+
+//add router 
+ npm install react-router-dom
+
+npm install axios    
+
+
+ > npm install timeago.js
+
+
+
+ //learm how to use context APi and reduce
